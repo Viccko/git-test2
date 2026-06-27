@@ -42,7 +42,12 @@ npm run dev
 
 浏览器打开 http://localhost:5173
 
-## API 接口
+## 部署到阿里云
+
+详见 [docs/deploy-aliyun.md](docs/deploy-aliyun.md)。
+
+简要步骤：ECS 安装 Docker / Node / Nginx → `git clone` → 配置 Nginx → 运行 `bash deploy/deploy.sh`。
+
 
 | 方法 | 路径 | 说明 |
 |------|------|------|

@@ -1,0 +1,16 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: subject_ai_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: subject_ai
+      MYSQL_USER: subject_user
+      MYSQL_PASSWORD: subject_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - subject_ai_mysql_data:/var/lib/mysql
+
+volumes:
+  subject_ai_mysql_data:

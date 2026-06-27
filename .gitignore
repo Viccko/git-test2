@@ -1,0 +1,17 @@
+# 依赖
+node_modules/
+
+# 环境变量（含密码和 API Key）
+.env
+.env.local
+
+# 构建产物
+dist/
+.next/
+build/
+
+# 系统文件
+.DS_Store
+
+# Docker 数据卷（如有本地挂载）
+mysql_data/

@@ -13,11 +13,13 @@ git pull origin feature/subject-ai-mvp || git pull
 echo "==> [2/6] 环境变量"
 if [ ! -f .env ]; then
   cp .env.example .env
-  echo "已创建 .env，请按需修改密码后重新运行"
 fi
+# 生产环境 MySQL 映射到 3308，避免与服务器上其他 MySQL 冲突
+grep -q '^DB_PORT=' .env && sed -i 's/^DB_PORT=.*/DB_PORT=3308/' .env || echo 'DB_PORT=3308' >> .env
 
 echo "==> [3/6] 启动 MySQL"
-docker compose -f docker-compose.yml -f deploy/docker-compose.prod.yml up -d
+docker rm -f subject_ai_mysql 2>/dev/null || true
+docker compose -f deploy/docker-compose.prod.yml up -d
 sleep 5
 docker exec -i subject_ai_mysql mysql -u subject_user -psubject_pass \
   --default-character-set=utf8mb4 subject_ai < sql/init.sql

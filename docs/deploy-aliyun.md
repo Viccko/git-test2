@@ -92,7 +92,9 @@ DB_PASSWORD=你的强密码
 PORT=3000
 ```
 
-同时修改 `docker-compose.yml` 中的 `MYSQL_PASSWORD` 与 `.env` 保持一致。
+同时修改 `deploy/docker-compose.prod.yml` 中的 `MYSQL_PASSWORD` 与 `.env` 保持一致。
+
+> 生产环境 MySQL 使用 **3308** 端口（`127.0.0.1:3308`），避免与服务器上其他 MySQL（如 3306/3307）冲突。
 
 ---
 

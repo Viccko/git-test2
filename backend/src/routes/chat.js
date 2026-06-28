@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import pool from '../db.js';
-import { generateMockAnswer } from '../services/mockAi.js';
+import { generateDeepSeekAnswer } from '../services/deepSeekService.js';
 
 const router = Router();
 const VALID_SUBJECTS = new Set(['math', 'english', 'physics']);
 const VALID_GRADES = new Set(['高一', '高二', '高三']);
-const ANSWER_SOURCE = 'mock';
+const ANSWER_SOURCE = 'deepseek';
 
 router.post('/', async (req, res) => {
   const { subject, grade, question } = req.body || {};
@@ -21,7 +21,20 @@ router.post('/', async (req, res) => {
   }
 
   const trimmedQuestion = question.trim();
-  const answer = generateMockAnswer({ subject, grade, question: trimmedQuestion });
+
+  let answer;
+  try {
+    answer = await generateDeepSeekAnswer({ subject, grade, question: trimmedQuestion });
+  } catch (err) {
+    if (err.code === 'CONFIG_ERROR') {
+      return res.status(503).json({ error: 'DeepSeek API key not configured' });
+    }
+    if (err.code === 'PARSE_ERROR') {
+      return res.status(502).json({ error: 'AI response parse failed' });
+    }
+    console.error('DeepSeek error:', err.message);
+    return res.status(502).json({ error: 'DeepSeek API request failed' });
+  }
 
   try {
     const [result] = await pool.query(

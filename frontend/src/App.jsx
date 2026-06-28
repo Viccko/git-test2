@@ -58,7 +58,7 @@ export default function App() {
     <div className="app">
       <header>
         <h1>高中学科知识 AI</h1>
-        <p className="subtitle">数学 · 英语 · 物理 · 第 9 节 Mock MVP</p>
+        <p className="subtitle">数学 · 英语 · 物理 · DeepSeek AI 答疑</p>
       </header>
 
       <main>
@@ -82,7 +82,7 @@ export default function App() {
 
       <footer>
         <small>
-          第 10 节将把后端 <code>backend/src/services/mockAi.js</code> 替换为 DeepSeek API。
+        已接入 DeepSeek API
         </small>
       </footer>
     </div>

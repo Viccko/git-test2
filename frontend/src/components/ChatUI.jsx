@@ -52,7 +52,7 @@ export function QuestionForm({ question, onChange, onSubmit, loading }) {
         onChange={(e) => onChange(e.target.value)}
       />
       <button type="button" className="btn-primary" onClick={onSubmit} disabled={loading}>
-        {loading ? '提交中…' : '提交问题'}
+      {loading ? 'AI 正在思考…' : '提交问题'}
       </button>
     </div>
   );
@@ -85,6 +85,9 @@ export function AnswerPanel({ answer }) {
       <p className="example-a">{answer.example.answer}</p>
 
       <p className="reminder">💡 {answer.reminder}</p>
+      {answer.disclaimer && (
+        <p className="disclaimer">⚠️ {answer.disclaimer}</p>
+      )}
     </section>
   );
 }

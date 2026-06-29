@@ -184,6 +184,11 @@ textarea {
   color: #166534;
 }
 
+.tag.source {
+  background: #f1f5f9;
+  color: #475569;
+}
+
 .history-q {
   margin: 0.5rem 0 0.25rem;
   font-size: 0.95rem;

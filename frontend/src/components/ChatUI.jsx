@@ -6,6 +6,11 @@ const SUBJECT_LABELS = {
   physics: '物理',
 };
 
+const SOURCE_LABELS = {
+  mock: 'Mock',
+  deepseek: 'DeepSeek',
+};
+
 export default function SubjectSelect({ subjects, value, onChange }) {
   return (
     <label className="field">
@@ -104,9 +109,12 @@ export function HistoryList({ records }) {
             <li key={r.id}>
               <span className="tag">{SUBJECT_LABELS[r.subject] || r.subject}</span>
               <span className="tag grade">{r.grade}</span>
+              {r.source && (
+                <span className="tag source">{SOURCE_LABELS[r.source] || r.source}</span>
+              )}
               <p className="history-q">{r.question}</p>
               <span className="meta">
-                {r.source} · {new Date(r.createdAt).toLocaleString('zh-CN')}
+                {new Date(r.createdAt).toLocaleString('zh-CN')}
               </span>
             </li>
           ))}

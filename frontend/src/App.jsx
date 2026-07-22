@@ -15,7 +15,8 @@ export default function App() {
   const [answer, setAnswer] = useState(null);
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [chatError, setChatError] = useState('');
+  const [pageError, setPageError] = useState('');
 
   const loadHistory = useCallback(async () => {
     const data = await fetchHistory(5);
@@ -30,15 +31,15 @@ export default function App() {
           setSubject(data.subjects[0].code);
         }
       })
-      .catch(() => setError('无法加载学科列表，请确认后端已启动。'));
+      .catch(() => setPageError('无法加载学科列表，请稍后刷新页面。检查网络或服务端。'));
 
-    loadHistory().catch(() => setError('无法加载历史记录。'));
+    loadHistory().catch(() => setPageError('无法加载历史记录，请稍后刷新页面。检查网络或服务端。'));
   }, [loadHistory]);
 
   async function handleSubmit() {
-    setError('');
+    setChatError('');
     if (!subject || !grade || !question.trim()) {
-      setError('请选择学科、年级并输入问题。');
+      setChatError('请先选择学科和年级，并输入学习问题。');
       return;
     }
 
@@ -46,9 +47,11 @@ export default function App() {
     try {
       const result = await submitChat({ subject, grade, question: question.trim() });
       setAnswer(result.answer);
-      await loadHistory();
+      loadHistory().catch(() => {
+        setPageError('答案已生成，但历史记录暂时无法刷新。请稍后重试。检查网络或服务端。');
+      });
     } catch (err) {
-      setError(err.message);
+      setChatError(err.message);
     } finally {
       setLoading(false);
     }
@@ -73,8 +76,20 @@ export default function App() {
             onSubmit={handleSubmit}
             loading={loading}
           />
-          {error && <p className="error">{error}</p>}
+          {chatError && (
+            <div className="error" role="alert">
+              <strong>提交遇到问题</strong>
+              <span>{chatError}</span>
+            </div>
+          )}
         </section>
+
+        {pageError && (
+          <div className="error page-error" role="alert">
+            <strong>页面提示</strong>
+            <span>{pageError}</span>
+          </div>
+        )}
 
         <AnswerPanel answer={answer} />
         <HistoryList records={history} />

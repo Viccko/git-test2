@@ -1,17 +1,21 @@
 const API_BASE = '';
 
-function getChatErrorMessage(error) {
+function getChatErrorMessage(error, status) {
   const messages = {
-    'Invalid subject': '请选择正确的学科后再提交。',
-    'Invalid grade': '请选择正确的年级后再提交。',
-    'Question is required': '请输入学习问题后再提交。',
-    'DeepSeek API key not configured': 'AI 服务还没有配置好，请联系老师或管理员。请稍后重试。',
-    'AI response parse failed': 'AI 返回的内容格式异常，请稍后重试。',
+    'Invalid subject': '请选择有效的学科后重新提交。',
+    'Invalid grade': '请选择有效的年级后重新提交。',
+    'Question is required': '请输入学习问题后重新提交。',
+    'DeepSeek API key not configured': 'AI 服务尚未配置完成，请联系老师或管理员。请稍后重试。',
+    'AI response parse failed': 'AI 返回的答案格式异常，请稍后重试。检查网络或服务端。',
     'DeepSeek API request failed': 'AI 服务暂时没有响应，请稍后重试。检查网络或服务端。',
     'Failed to save chat record': '问答记录保存失败，请稍后重试。检查网络或服务端。',
   };
 
-  return messages[error] || '提交失败，请稍后重试。检查网络或服务端。';
+  if (messages[error]) return messages[error];
+  if (status >= 500) {
+    return '服务端暂时无法处理问题，请稍后重试。检查网络或服务端。';
+  }
+  return '问题提交失败，请稍后重试。检查网络或服务端。';
 }
 
 export async function fetchSubjects() {
@@ -34,7 +38,7 @@ export async function submitChat({ subject, grade, question }) {
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(getChatErrorMessage(err.error));
+    throw new Error(getChatErrorMessage(err.error, res.status));
   }
   return res.json();
 }
